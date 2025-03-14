@@ -42,6 +42,7 @@ type ClCompile struct {
 	XMLName                      xml.Name `xml:"ClCompile"`
 	AdditionalIncludeDirectories string   `xml:"AdditionalIncludeDirectories"`
 	PreprocessorDefinitions      string   `xml:"PreprocessorDefinitions"`
+	AdditionalOptions            string   `xml:"AdditionalOptions"`
 }
 
 type ClCompileSrc struct {
@@ -58,6 +59,7 @@ type CompileCommand struct {
 var badInclude = []string{
 	";%(AdditionalIncludeDirectories)",
 	"%(AdditionalIncludeDirectories);",
+	"%(AdditionalOptions)",
 }
 var badDef = []string{
 	";%(PreprocessorDefinitions)",
@@ -87,7 +89,7 @@ func NewProject(path string) (Project, error) {
 	return pro, nil
 }
 
-//return include, definition,error
+// return include, definition,error
 func (pro *Project) FindConfig(conf string) (string, string, error) {
 	var cfgList []ProjectConfiguration
 	for _, v := range pro.ItemGroup {
@@ -132,9 +134,7 @@ func (pro *Project) FindConfig(conf string) (string, string, error) {
 			include := cl.AdditionalIncludeDirectories
 			def := cl.PreprocessorDefinitions
 			for k, v := range willReplaceEnv {
-				if strings.Contains(include, k) {
-					include = strings.Replace(include, k, v, -1)
-				}
+				include = strings.Replace(include, k, v, -1)
 			}
 
 			re := regexp.MustCompile(`\$\(.+\)`)
@@ -146,7 +146,9 @@ func (pro *Project) FindConfig(conf string) (string, string, error) {
 				//}
 			}
 
-			return include, def, nil
+			externalInclude := cl.AdditionalOptions
+
+			return include + externalInclude, def, nil
 		}
 	}
 	return "", "", errors.New("not found " + conf)
