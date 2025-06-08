@@ -98,7 +98,6 @@ func (pro *Project) FindConfig(conf string) (string, string, error) {
 			break
 		}
 	}
-	fmt.Fprintln(os.Stderr, cfgList)
 	if len(cfgList) == 0 {
 		return "", "", errors.New(pro.ProjectPath + ":not found " + conf)
 	}
@@ -151,7 +150,7 @@ func (pro *Project) FindConfig(conf string) (string, string, error) {
 			return include + externalInclude, def, nil
 		}
 	}
-	return "", "", errors.New("not found " + conf)
+	return "", "", nil
 }
 
 func (pro *Project) FindSourceFiles() []string {

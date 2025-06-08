@@ -1,13 +1,13 @@
 package main
 
 import (
-    "encoding/json"
+	"encoding/json"
 	"flag"
 	"fmt"
-	"os"
-	"vs_export/sln"
 	"io/ioutil"
-    "path/filepath"
+	"os"
+	"path/filepath"
+	"vs_export/sln"
 )
 
 func main() {
@@ -40,7 +40,6 @@ func main() {
 	ioutil.WriteFile("compile_commands.json", js[:], 0644)
 }
 
-
 func usage() {
 	var echo = `Usage: %s -s <path> -c <configuration>
 
@@ -50,5 +49,5 @@ Where:
                                              default Debug|Win32
 	`
 	echo = fmt.Sprintf(echo, filepath.Base(os.Args[0]))
-    fmt.Println(echo)
+	fmt.Println(echo)
 }
